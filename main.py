@@ -2,7 +2,6 @@
 import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
 from dotenv import load_dotenv
 
 from services.knn import KNN
@@ -32,6 +31,3 @@ KNN = KNN()
 def prosesKNN(knn: KNNBase):
     print(knn.k)
     return KNN.proses(knn.text, knn.k)
-
-
-app.mount("/", StaticFiles(directory="static", html=True), name="static")
