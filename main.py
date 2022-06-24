@@ -3,7 +3,7 @@ import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
-
+from starlette.staticfiles import StaticFiles
 from services.knn import KNN
 from schemas.knn_schema import KNNBase
 
@@ -31,3 +31,6 @@ KNN = KNN()
 def prosesKNN(knn: KNNBase):
     print(knn.k)
     return KNN.proses(knn.text, knn.k)
+
+
+app.mount("/", StaticFiles(directory="static", html=True), name="site")
