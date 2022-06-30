@@ -25,12 +25,18 @@ app.add_middleware(
 
 
 KNN = KNN()
+# KNN = None
 
 
 @app.post("/api/proses")
 def prosesKNN(knn: KNNBase):
-    print(knn.k)
+    print(knn.text)
     return KNN.proses(knn.text, knn.k)
+
+
+@app.get("/api/calculateTFIDF")
+def calculateTFIDF():
+    return KNN.calculateTFIDF()
 
 
 app.mount("/", StaticFiles(directory="static", html=True), name="site")
