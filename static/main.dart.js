@@ -138728,7 +138728,7 @@ s($,"brN","b8_",()=>new A.a3P(A.b9("/",!0),A.b9("[^/]$",!0),A.b9("^/",!0)))
 s($,"brP","ah5",()=>new A.a7b(A.b9("[/\\\\]",!0),A.b9("[^/\\\\]$",!0),A.b9("^(\\\\\\\\[^\\\\]+\\\\[^\\\\/]+|[a-zA-Z]:[/\\\\])",!0),A.b9("^[/\\\\](?![/\\\\])",!0)))
 s($,"brO","Uq",()=>new A.a7_(A.b9("/",!0),A.b9("(^[a-zA-Z][-+.a-zA-Z\\d]*://|[^/])$",!0),A.b9("[a-zA-Z][-+.a-zA-Z\\d]*://[^/]*",!0),A.b9("^/",!0)))
 s($,"brM","aY1",()=>A.bj9())
-s($,"bq7","aXR",()=>{var q=A.be_("https://knn-server.herokuapp.com/api/"),p=new A.alb(A.b5S(),new A.a0K(A.d([],A.a9("r<Cw>")),A.aVg(),A.aVg(),A.aVg()),A.b5S(),new A.akT(),!1)
+s($,"bq7","aXR",()=>{var q=A.be_("http://127.0.0.1:8000/api/"),p=new A.alb(A.b5S(),new A.a0K(A.d([],A.a9("r<Cw>")),A.aVg(),A.aVg(),A.aVg()),A.b5S(),new A.akT(),!1)
 p.a4n$=q
 p.a4o$=new A.aiz(A.bh(t.Gf))
 return p})
