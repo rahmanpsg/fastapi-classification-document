@@ -39,4 +39,9 @@ def calculateTFIDF():
     return KNN.calculateTFIDF()
 
 
+@app.get("/api/training")
+def training():
+    return KNN.training()
+
+
 app.mount("/", StaticFiles(directory="static", html=True), name="site")
