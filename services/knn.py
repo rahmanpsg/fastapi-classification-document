@@ -4,8 +4,7 @@ from config.database import db
 import numpy as np
 import pandas as pd
 from sklearn.neighbors import NearestNeighbors, KNeighborsClassifier
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import classification_report, confusion_matrix
+from sklearn.metrics import classification_report
 from sklearn.model_selection import ShuffleSplit
 from sklearn.utils import _safe_indexing, indexable
 from itertools import chain
@@ -67,8 +66,8 @@ class KNN():
         print("document cleaned")
 
         # save X and y
-        self.X.to_csv('X.csv', index=False)
-        self.y.to_csv('y.csv', index=False)
+        # self.X.to_csv('X.csv', index=False)
+        # self.y.to_csv('y.csv', index=False)
 
     def createTFIDFModel(self):
         self.dictionary = Dictionary(self.document_cleaned)
@@ -121,16 +120,65 @@ class KNN():
         # test tfidf values from created tfidf model
         test_corpus_tfidf = self.tfidf[test_corpus_bow]
 
+        # for doc in test_corpus_tfidf:
+        #     print([[self.dictionary[id], np.around(freq, decimals=2)]
+        #           for id, freq in doc])
+
         # test sparse matrix
         test_corpus_tfidf_sparse = corpus2csc(
             test_corpus_tfidf, self.num_terms).T
 
+        print(test_corpus_tfidf_sparse)
+
         distances, indices = self.model.kneighbors(test_corpus_tfidf_sparse)
+
+        print(distances[0])
 
         df_hasil = self.df.loc[indices[0]]
         df_hasil['jarak'] = distances[0]
 
-        return df_hasil.to_json(orient='records')
+        hasil_tfidf = []
+
+        for doc in self.document_cleaned.loc[indices[0]]:
+
+            text = ' '.join(doc)
+
+            # Memecah setiap kata
+            keywords = re.findall(r'[a-zA-Z]\w+', text)
+
+            df = pd.DataFrame(list(set(keywords)),
+                              columns=['keyword'])
+
+            # df = pd.DataFrame(test_dokumen.values[0],
+            #                   columns=['keyword'])
+
+            df['count'] = df['keyword'].apply(
+                lambda x: self.weightage(x, text, self.tfidf.num_docs)[0])
+            df['tf'] = df['keyword'].apply(
+                lambda x: self.weightage(x, text, self.tfidf.num_docs)[1])
+            df['idf'] = df['keyword'].apply(
+                lambda x: self.weightage(x, text, self.tfidf.num_docs)[2])
+            df['tf_idf'] = df['keyword'].apply(
+                lambda x: self.weightage(x, text, self.tfidf.num_docs)[3])
+
+            # remove index where keyword not in list
+            df = df.drop(
+                df[df.keyword.isin(test_dokumen.values[0]) == False].index)
+
+            # add keyword if not in list
+            for keyword in test_dokumen.values[0]:
+                if keyword not in df.keyword.values:
+                    df = df.append(
+                        {'keyword': keyword, 'count': 0, 'tf': 0, 'idf': 0, 'tf_idf': 0}, ignore_index=True)
+
+            # print(df)
+
+            hasil_tfidf.append(df.to_dict(orient='records'))
+
+        # print(hasil_tfidf)
+        df_hasil['hasil_tfidf'] = hasil_tfidf
+
+        return df_hasil.to_dict(orient='records')
 
     def weightage(self, word, text, number_of_documents=1):
         word_list = re.findall(word, text)
